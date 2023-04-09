@@ -1,6 +1,6 @@
 package lexer
 
-import "monkey-clone/token"
+import "monkey_clone/token"
 
 /*
 	함수:
