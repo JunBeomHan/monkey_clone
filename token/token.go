@@ -7,7 +7,7 @@ type Token struct {
 	Literal string
 }
 
-// TokenTypes
+// Token Types
 const (
 	ILLEGAL = "ILLEGAL" // 어떤 토큰이나 문자를 렉서가 알 수 없다. 라는 의미로 사용됨
 
