@@ -2,6 +2,15 @@ package lexer
 
 import "monkey-clone/token"
 
+/*
+	함수:
+		func name
+		public? private?
+		리시버
+		매개변수
+		반환값
+*/
+
 // [Public] Lexer struct 생성자
 func New(input string) *Lexer {
 	l := &Lexer{input: input}
