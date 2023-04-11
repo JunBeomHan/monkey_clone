@@ -38,7 +38,7 @@ type Lexer struct {
 
 // [Private] 다음 문자의 접근하고 저장하는 행위
 func (l *Lexer) readChar() {
-	if l.readPosition >= len(l.input) {
+	if l.readPosition >= len(l.input) /*EOF라면?*/ {
 		l.ch = 0 // l.ch = NUL -> (아직 아무것도 읽지 않는 상태 or 파일의 끝(EOF))
 	} else {
 		l.ch = l.input[l.readPosition]
@@ -71,14 +71,48 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.LBRACE, l.ch)
 	case '}':
 		tok = newToken(token.RBRACE, l.ch)
+
 	case 0:
 		// newToken 함수를 사용하지 않은 이유는 tok.Literal 값에 ""를 대입해주기 위해서.
 		tok.Literal = ""
 		tok.Type = token.EOF
+	default:
+		// 식별자를 확인. (여기서 식별자란 키워드, 함수명, 변수명이 포함된다..? -> TODO:: Seach해보기)
+		if isLetter(l.ch) {
+			tok.Literal = l.readIdentifer()
+			// Token의 타입은 LookUpIdent함수로 실행하여 얻어온다. 그 이유는 식별자는 종류가 여러개이기 때문이다.
+			// LookUpIdent 함수는 token/token.go에 있음
+			tok.Type = token.LookUpIdent(tok.Literal)
+			// 여기서 중요!! 그냥 이렇게 작성한 경우 식별자가 연달아 나온 경우
+			// 공백을 처리하지 못하고 ILLEGAL 토큰을 반환한다. 그러므로 공백을 지나가는 함수를 정의해줘야 한다.
+			return tok
+		} else {
+			// 알수 없는 오류 처리
+			tok = newToken(token.ILLEGAL, l.ch)
+		}
 	}
 	l.readChar()
 	return tok
 
+}
+
+// [Private]
+// 문자 그대로 동작하는 함수이다.
+// 식별자 하나를 읽어 들이고 렉서의 position를 저장한 뒤 글자가 아닐 떄까지 돌린 postition까지 식별자로 판단한다.
+func (l *Lexer) readIdentifer() string {
+	position := l.position
+	for isLetter(l.ch) {
+		l.readChar()
+	}
+	return l.input[position:l.position] // position ~ (l.position - 1)
+}
+
+// [Private]
+// 파싱의 전반적인 과정에서 중요한 역확을 한다. 왜냐하면
+// ch == '_' 여기서 _는 식별자를 허용한다는 말이기 때문이다.
+// 만약 !를 식별자로 사용하고 싶으면 아래의 코드에 ch == '!'만 삽입하면 된다.
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 
 // [Private]
