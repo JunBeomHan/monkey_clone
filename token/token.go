@@ -1,23 +1,54 @@
 package token
 
+// 사용자 정의 자료형 TokenType
+/*
+	TokenType을 String으로 정의한 이유는 서로 다른 여러 값을 TokenType으로
+	필요한 만큼 정의하여 사용할 수 있기 때문이다.
+*/
 type TokenType string
 
+// Token 구조체
+/*
+	토큰이란 쉽게 분류할 수 있는 작은 자료구조이다.
+	Token은 두개의 필드를 지닌다.
+	1.Ty pe
+		Type 필드는 토큰이 어떤 타입인지 나타내는 역활을 한다.
+	2.Literal
+	 	Literal 필디는 토큰의 값을 가지는 역활을 한다.
+
+	예를 들면)
+	`let x = 5;` 이러한 코드가 있다고 했을땐, 5가지 토큰이 생성된다.
+	{LET, "let"},
+	{IDENT, "x"},
+	{ASSIGN, "="},
+	{INT, "5"},
+	{SEMICOLON, ";"},
+
+*/
 type Token struct {
 	Type    TokenType
 	Literal string
 }
 
 // Token Types
+/*
+	Token Type이란 이 토큰이 어떤 토큰인지 구별해주는 역활을 한다.
+	마치 변수의 변수 타입과 유사한 개념이다. (이 변수가 어떤 자료형인가의 관점)
+
+	요컨대 매우 많은 Token Types들이 존재하지만, 그 중 식별자의 말이 햇갈릴 수 있습니다.
+	여기서 식별자란 예약어, 함수명, 변수명 등등을 포괄하는 의미이고
+	밑에 IDENT tokenType은 사용자 정의 식별자를 나타냅니다.
+*/
 const (
 	ILLEGAL = "ILLEGAL" // 어떤 토큰이나 문자를 렉서가 알 수 없다. 라는 의미로 사용됨
 
 	EOF = "EOF" // 파서(Parser)에게 "이제 그만해도 좋다"라는 의미로 사용됨
 
-	// Identifine + Literal
+	// 사용자 정의 식별자와 + Literal
 	IDENT = "IDENT" // 사용자 정의 식별자를 나타냅니다.
 	INT   = "INT"
 
-	// Operators
+	// 연산자
 	ASSIGN = "="
 	PLUS   = "+"
 
@@ -30,26 +61,27 @@ const (
 	LBRACE = "{"
 	RBRACE = "}"
 
-	// Keywords
+	// 예약어
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
 )
 
-// Keywrods
+// Keywrods 맵
+/*
+	키워드에 대응하는 문자열을 tokenType이랑 매칭시켜논 자료구조 입니다.
+*/
 var keywords = map[string]TokenType{
 	"fn":  FUNCTION,
 	"let": LET,
 }
 
+// LookUpIdent 함수
+// 매개변수 자료형 	 string
+// 반환형 자료형    TokenType
 /*
-func LookUpIdent(ident string) TokenType
-- 함수의 쓰임새
-이 함수는 식별자 중 키워드인지, 변수명인지, 함수명인지 판단하여 해당 TokenType을
-반환하는 함수 입니다.
 
-- 함수의 원리
-먼저, 매개변수로 string 변수를 받고, keywords 맵에 해당 키에 대응하는 값이 있으면 TokenType을 반환합니다. (keywords안에는 monkey lang이 사용하는 키워드가 존재합니다.)
-만약 없다면 사용자 정의 식별자를 나타내는 IDENT를 반환합니다.
+이 함수는 식별자 중 예약어가 있으면 예약어를 반환하고
+없으면 IDENT(사용자 정의 식별자)를 반환하는 함수 입니다.
 */
 func LookUpIdent(ident string) TokenType {
 	if tok, ok := keywords[ident]; ok {
