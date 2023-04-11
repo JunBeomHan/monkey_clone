@@ -1,11 +1,13 @@
 package lexer
 
 import (
+	"fmt"
 	"monkey_clone/token"
 	"testing"
 )
 
 func TestNextToken(t *testing.T) {
+
 	input := `let five = 5;
 			  let ten = 10;
 			  let add = fn(x, y) {
@@ -35,12 +37,12 @@ func TestNextToken(t *testing.T) {
 		{token.LPAREN, "("},
 		{token.IDENT, "x"},
 		{token.COMMA, ","},
-		{token.IDNET, "y"},
+		{token.IDENT, "y"},
 		{token.RPAREN, ")"},
 		{token.LBRACE, "{"},
 		{token.IDENT, "X"},
 		{token.PLUS, "+"},
-		{token.INDET, "Y"},
+		{token.IDENT, "Y"},
 		{token.SEMICOLON, ";"},
 		{token.RBRACE, "}"},
 		{token.SEMICOLON, ";"},
@@ -51,7 +53,7 @@ func TestNextToken(t *testing.T) {
 		{token.LPAREN, "("},
 		{token.IDENT, "five"},
 		{token.COMMA, ","},
-		{token.IDNET, "ten"},
+		{token.IDENT, "ten"},
 		{token.LPAREN, ")"},
 		{token.SEMICOLON, ";"},
 		{token.EOF, ""},
@@ -60,12 +62,16 @@ func TestNextToken(t *testing.T) {
 	l := New(input)
 
 	for index, resTok := range tests {
+
 		tok := l.NextToken()
 		if tok.Type != resTok.expectedType {
+
 			t.Fatalf("tests[%d] - tokentype wrong. expected=%q, got=%q", index, resTok.expectedType, tok.Type)
+
 		}
 		if tok.Literal != resTok.expectedLiteral {
 			t.Fatalf("tests[%d] - literal wrong. expected=%q, got=%q", index, resTok.expectedLiteral, tok.Literal)
+			fmt.Println(index)
 		}
 	}
 }
