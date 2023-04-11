@@ -30,7 +30,7 @@ func TestNextToken(t *testing.T) {
 		{token.ASSIGN, "="},
 		{token.INT, "10"},
 		{token.SEMICOLON, ";"},
-		{token.LET, "LET"},
+		{token.LET, "let"},
 		{token.IDENT, "add"},
 		{token.ASSIGN, "="},
 		{token.FUNCTION, "fn"},
@@ -40,9 +40,9 @@ func TestNextToken(t *testing.T) {
 		{token.IDENT, "y"},
 		{token.RPAREN, ")"},
 		{token.LBRACE, "{"},
-		{token.IDENT, "X"},
+		{token.IDENT, "x"},
 		{token.PLUS, "+"},
-		{token.IDENT, "Y"},
+		{token.IDENT, "y"},
 		{token.SEMICOLON, ";"},
 		{token.RBRACE, "}"},
 		{token.SEMICOLON, ";"},
@@ -54,7 +54,7 @@ func TestNextToken(t *testing.T) {
 		{token.IDENT, "five"},
 		{token.COMMA, ","},
 		{token.IDENT, "ten"},
-		{token.LPAREN, ")"},
+		{token.RPAREN, ")"},
 		{token.SEMICOLON, ";"},
 		{token.EOF, ""},
 	}
@@ -64,6 +64,7 @@ func TestNextToken(t *testing.T) {
 	for index, resTok := range tests {
 
 		tok := l.NextToken()
+		fmt.Printf("index[%d] tokenType:%q, tokenLiteral:%q\n", index, tok.Type, tok.Literal)
 		if tok.Type != resTok.expectedType {
 
 			t.Fatalf("tests[%d] - tokentype wrong. expected=%q, got=%q", index, resTok.expectedType, tok.Type)
