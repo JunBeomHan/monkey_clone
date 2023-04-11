@@ -1,6 +1,8 @@
 package lexer
 
-import "monkey_clone/token"
+import (
+	"monkey_clone/token"
+)
 
 /*
 	함수:
@@ -54,6 +56,8 @@ func (l *Lexer) readChar() {
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
+	l.skipWhitespace()
+
 	switch l.ch {
 	case '=':
 		tok = newToken(token.ASSIGN, l.ch)
@@ -86,6 +90,10 @@ func (l *Lexer) NextToken() token.Token {
 			// 여기서 중요!! 그냥 이렇게 작성한 경우 식별자가 연달아 나온 경우
 			// 공백을 처리하지 못하고 ILLEGAL 토큰을 반환한다. 그러므로 공백을 지나가는 함수를 정의해줘야 한다.
 			return tok
+		} else if isDigit(l.ch) { // 숫자 처리
+			tok.Type = token.INT
+			tok.Literal = l.readNumber()
+			return tok
 		} else {
 			// 알수 없는 오류 처리
 			tok = newToken(token.ILLEGAL, l.ch)
@@ -93,7 +101,13 @@ func (l *Lexer) NextToken() token.Token {
 	}
 	l.readChar()
 	return tok
+}
 
+func (l *Lexer) skipWhitespace() {
+	for l.ch == ' ' || l.ch == '\n' || l.ch == '\t' || l.ch == '\r' {
+		l.readChar()
+	}
+	// 다른 파서에서는 eatWhitespace, comsumeWhitespace 혹은 아예 다른 이름으로 불린다.
 }
 
 // [Private]
@@ -105,6 +119,21 @@ func (l *Lexer) readIdentifer() string {
 		l.readChar()
 	}
 	return l.input[position:l.position] // position ~ (l.position - 1)
+}
+
+func (l *Lexer) readNumber() string {
+	position := l.position
+	for isDigit(l.ch) {
+		l.readChar()
+	}
+	return l.input[position:l.position]
+}
+
+func isDigit(ch byte) bool {
+	/*
+		실제로는 2진수, 8진수, 16진수를 생각해야 한다.
+	*/
+	return ch >= '0' && ch <= '9'
 }
 
 // [Private]
