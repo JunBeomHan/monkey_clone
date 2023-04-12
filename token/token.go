@@ -7,7 +7,7 @@ package token
 */
 type TokenType string
 
-// Token 구조체
+// 사용자 정의 구조체 Token
 /*
 	토큰이란 쉽게 분류할 수 있는 작은 자료구조이다.
 	Token은 두개의 필드를 지닌다.
@@ -76,12 +76,14 @@ var keywords = map[string]TokenType{
 }
 
 // LookUpIdent 함수
-// 매개변수 자료형 	 string
-// 반환형 자료형    TokenType
+// 매개변수 자료형:	 string
+// 반환형 자료형 :  TokenType
 /*
+이 함수는 식별자 중 키워드인지 아닌지 판단하는 행위를 당담한다.
 
-이 함수는 식별자 중 예약어가 있으면 예약어를 반환하고
-없으면 IDENT(사용자 정의 식별자)를 반환하는 함수 입니다.
+만약 string이 keywords에 대응되는 ToeknType이 있다면 해당 TokenType을 반환하고
+없으면 반환하지 사용자 정의 식별자를 뜻하는 IDENT토큰을 반환한다.
+
 */
 func LookUpIdent(ident string) TokenType {
 	if tok, ok := keywords[ident]; ok {
