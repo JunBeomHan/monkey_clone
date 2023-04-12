@@ -5,7 +5,9 @@ import (
 	"monkey_clone/token"
 	"testing"
 )
-
+/*
+	여기는 테스트 코드 입니다.
+*/
 func TestNextToken(t *testing.T) {
 
 	input := `let five = 5;
