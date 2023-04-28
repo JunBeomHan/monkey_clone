@@ -5,18 +5,24 @@ import (
 	"monkey_clone/token"
 	"testing"
 )
+
 /*
-	여기는 테스트 코드 입니다.
+여기는 테스트 코드 입니다.
 */
 func TestNextToken(t *testing.T) {
 
 	input := `let five = 5;
-			  let ten = 10;
-			  let add = fn(x, y) {
-			      x + y;	
-			  };
-			  let result = add(five, ten);	
-			  `
+	let ten = 10;
+	let add = fn(x, y) {
+		x + y;
+	};
+
+	let result= add(five, ten);
+	!-/*5;
+
+	5 < 10 > 5;
+	
+	`
 
 	tests := []struct {
 		expectedType    token.TokenType
